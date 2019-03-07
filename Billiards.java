@@ -7,13 +7,15 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Clase billar que corresponde al juego de billar
  * 
  * TODO Transform the code to be used safely in a concurrent context.
  * 
- * @author Carlos LÃ³pez Nozal - Alejandro Goicoechea RomÃ¡n
+ * @author Carlos López Nozal - Alejandro Goicoechea Román
  */
 @SuppressWarnings("serial")
 public class Billiards extends JFrame {
@@ -25,10 +27,12 @@ public class Billiards extends JFrame {
 
 	private Board board;
 
-	// TODO update with number of group label. See practice statement.
+	private ExecutorService ejecutor;
+	// Update with number of group label. See practice statement. Nos pedía 6 bolas.
 	private final int N_BALL = 6;
 	private Ball[] balls;
-
+	protected Thread[] threads;
+	
 	public Billiards() {
 
 		board = new Board();
@@ -54,18 +58,53 @@ public class Billiards extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(Width, Height);
 		setLocationRelativeTo(null);
-		setTitle("PrÃƒÂ¡ctica programaciÃƒÂ³n concurrente objetos mÃƒÂ³viles independientes");
+		setTitle("Práctica programación concurrente objetos móviles independientes");
 		setResizable(false);
 		setVisible(true);
 	}
 
 	private void initBalls() {
-		// TODO init balls
+		balls = new Ball[N_BALL];
+		for (int i = 0; i < N_BALL; i++) {
+			balls[i] = new Ball();
+		}
+		board.setBalls(balls);
+		// Init balls
+	}
+
+	protected Thread makeThread(final Ball b) {
+		Runnable runloop = new Runnable() {
+			public void run() {
+				try {
+					for (;;) {
+						b.move();
+						Thread.sleep(100); // 100msec arbitrario
+					}
+				} catch (InterruptedException e) {
+					return;
+				}
+			}
+		};
+		return new Thread(runloop);
 	}
 
 	private class StartListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			if (threads == null) {
+				balls = new Ball[N_BALL];
+				for(int i = 0; i < N_BALL; ++i) {
+					balls[i] = new Ball();
+				}
+				threads = new Thread[N_BALL];
+				for (int i = 0; i < N_BALL; ++i) {
+					threads[i] = makeThread(balls[i]);
+					threads[i].start();
+				}
+			}
+			// executor newFiexedThreadPool, si son null, instanciar nuevo Thread con el nº
+			// de bolas, hace un for hasta el nº de bolas y dentro instanciar por cada
+			// número
 			// TODO Code is executed when start button is pushed
 
 		}
@@ -74,6 +113,12 @@ public class Billiards extends JFrame {
 	private class StopListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			if (threads != null) {
+				for (int i = 0; i < threads.length; ++i) {
+					threads[i].interrupt();
+				}
+				threads = null;
+			}
 			// TODO Code is executed when stop button is pushed
 
 		}

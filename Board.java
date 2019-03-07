@@ -9,7 +9,7 @@ import javax.swing.JPanel;
  * 
  * TODO Transform the code to be used safely in a concurrent context.
  * 
- * @author Carlos L√≥pez Nozal - Alejandro Goicoechea Rom√°n
+ * @author Carlos LÛpez Nozal - Alejandro Goicoechea Rom·n
  */
 @SuppressWarnings("serial")
 public class Board extends JPanel {

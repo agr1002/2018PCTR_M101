@@ -6,7 +6,7 @@ import javax.swing.ImageIcon;
  * 
  * TODO Transform the code to be used safely in a concurrent context.
  * 
- * @author Carlos LÃ³pez Nozal - Alejandro Goicoechea RomÃ¡n
+ * @author Carlos López Nozal - Alejandro Goicoechea Román
  */
 public class Ball {
 	// Find an archive named Ball.png
@@ -20,10 +20,10 @@ public class Ball {
 	public Ball() {
 		ImageIcon ii = new ImageIcon(this.getClass().getResource(Ball));
 		image = ii.getImage();
-		
+
 		IMG_TAM_X = image.getWidth(null);
 		IMG_TAM_Y = image.getHeight(null);
-		// TeÃ³ricamente hecho: Depend of image size
+		// Teóricamente hecho: Depend of image size
 //		IMG_TAM_X = 32;
 //		IMG_TAM_Y = 32;
 
@@ -46,7 +46,11 @@ public class Ball {
 
 		reflect();
 
-		// TODO Check postcondition
+		assert x > Board.LEFTBOARD: "Se ha salido del tablero por el lado izquierdo.";
+		assert x < Board.RIGHTBOARD: "Se ha salido del tablero por el lado derecho.";
+		assert y > Board.TOPBOARD: "Se ha salido del tablero por arriba.";
+		assert y < Board.BOTTOMBOARD: "Se ha salido del tablero por abajo.";
+		// Check postcondition: que no se salga del tablero
 	}
 
 	private void reflect() {
