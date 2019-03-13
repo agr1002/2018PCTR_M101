@@ -13,8 +13,6 @@ import java.util.concurrent.Executors;
 /**
  * Clase billar que corresponde al juego de billar
  * 
- * TODO Transform the code to be used safely in a concurrent context.
- * 
  * @author Carlos López Nozal - Alejandro Goicoechea Román
  */
 @SuppressWarnings("serial")
@@ -32,6 +30,7 @@ public class Billiards extends JFrame {
 	private final int N_BALL = 6;
 	private Ball[] balls;
 	protected Thread[] threads;
+	protected Thread pintor;
 	
 	public Billiards() {
 
@@ -93,20 +92,19 @@ public class Billiards extends JFrame {
 		public void actionPerformed(ActionEvent arg0) {
 			if (threads == null) {
 				balls = new Ball[N_BALL];
-				for(int i = 0; i < N_BALL; ++i) {
-					balls[i] = new Ball();
-				}
-				threads = new Thread[N_BALL];
-				for (int i = 0; i < N_BALL; ++i) {
-					threads[i] = makeThread(balls[i]);
+//				for(int i = 0; i < N_BALL; ++i) {
+//					balls[i] = new Ball();
+//				}
+//				threads = new Thread[N_BALL];
+				pintor = new Thread(new Pintor(board));
+				pintor.start();
+				for (int i = 0; i < balls.length; ++i) {
+//					threads[i] = makeThread(balls[i]);
+//					threads[i].start();
+					threads[i] = new Thread(new Movimiento(balls[i]));
 					threads[i].start();
 				}
 			}
-			// executor newFiexedThreadPool, si son null, instanciar nuevo Thread con el nº
-			// de bolas, hace un for hasta el nº de bolas y dentro instanciar por cada
-			// número
-			// TODO Code is executed when start button is pushed
-
 		}
 	}
 
@@ -119,8 +117,6 @@ public class Billiards extends JFrame {
 				}
 				threads = null;
 			}
-			// TODO Code is executed when stop button is pushed
-
 		}
 	}
 

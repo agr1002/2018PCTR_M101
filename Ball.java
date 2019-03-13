@@ -4,8 +4,6 @@ import javax.swing.ImageIcon;
 /**
  * Clase bola que corresponde a las bolas de billar
  * 
- * TODO Transform the code to be used safely in a concurrent context.
- * 
  * @author Carlos López Nozal - Alejandro Goicoechea Román
  */
 public class Ball {

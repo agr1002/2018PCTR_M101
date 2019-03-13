@@ -7,8 +7,6 @@ import javax.swing.JPanel;
 /**
  * Clase tablero que corresponde al tablero de billar
  * 
- * TODO Transform the code to be used safely in a concurrent context.
- * 
  * @author Carlos López Nozal - Alejandro Goicoechea Román
  */
 @SuppressWarnings("serial")
